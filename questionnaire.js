@@ -20,25 +20,24 @@ const questions = [
       {
         key: 'bleeding',
         question: 'Have you experienced unusual vaginal bleeding either after sex or between periods?\nYes/No',
-        options: ['yes', 'no'],
+        options: ['Yes', 'No'],
       },
     
       {
         key: 'pain',
         question: 'Do you feel pain during sex in the deep pelvic region?\nYes/No',
-        options: ['yes', 'no'],
+        options: ['Yes', 'No'],
       },
     
       {
         key: 'discharge',
         question: 'Have you noticed any unusual vaginal discharge?\nYes/No',
-        options: ['yes', 'no'],
+        options: ['Yes', 'No'],
       },
   ];
   
-  
   function getNextQuestion(step) {
-    return questions[step] ? questions[step].text : '';
+    return questions[step] ? questions[step].question : '';
   }
   
   function saveAnswer(session, input) {
@@ -50,20 +49,38 @@ const questions = [
   }
   
   function isComplete(session) {
-    return session.step >= questions.length;
+    return session.step >= questions.length; //returns true if session if end of questions have been reached
   }
   
+
   function calculateRisk(answers) {
     let risk = 0;
-    if (parseInt(answers.age) >= 25) risk++;
-    if (answers.sexually_active === 'yes') risk++;
-    if (answers.smoke === 'yes') risk++;
-    if (answers.hiv === 'yes') risk++;
+    const age = answers.age
+    const sex = answers.sexually_active
+    const flow = answers.bleeding
+    const pain = answers.pain
+    const vaccinated = answers.hpv_vaccine
+    const discharge = answers.discharge
+    
+    if (age === 'B' || age === 'E') {
+        risk++; // risk is 1 in 21 - 29 as well as over 65 yo. Its 0 for under 21
+    } else if (age === 'C') {
+        risk + 4; // 35–44
+    } else if (age === 'D') {
+        risk + 3; // 45-64
+    }
+
+    if (sex === 'Yes') risk++;
+    if (vaccinated === 'No') risk++;
+    if (flow === 'Yes') risk++;
+    if (pain === 'Yes') risk++;
+    if (discharge === 'Yes') risk++;
   
     if (risk >= 3) return 'high';
     if (risk === 2) return 'medium';
     return 'low';
   }
+  
   
   module.exports = { getNextQuestion, saveAnswer, isComplete, calculateRisk };
   
