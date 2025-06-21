@@ -8,7 +8,10 @@ const { calculateProbabilisticRisk } = require('./predict');
 const sessions = require('./session');
 const clinics = require('./clinics');
 
-const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+// Set twilios environmental variables.
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const client = twilio(accountSid, authToken);
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
