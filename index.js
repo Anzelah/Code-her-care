@@ -3,8 +3,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const twilio = require('twilio');
 
-const { getNextQuestion, saveAnswer, isComplete, calculateRisk } = require('./questionnaire');
-const sessions = require('./sessions');
+const { getNextQuestion, saveAnswer, isComplete } = require('./questionnaire');
+const { calculateProbabilisticRisk } = require('./predict');
+const sessions = require('./session');
 const clinics = require('./clinics');
 
 const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
@@ -29,7 +30,7 @@ app.post('/webhook', (req, res) => {
   saveAnswer(session, incomingMsg);
 
   if (isComplete(session)) {
-    const risk = calculateRisk(session.answers);
+    const risk = calculateProbabilisticRisk(session.answers);
     const clinicList = clinics('nairobi'); // You can refine by user input later
 
     const response = `🩺 *Your risk level is:* ${risk.toUpperCase()}.\n\n🏥 *Suggested clinics near you:*\n${clinicList.map(c => `• ${c.name}, ${c.location}`).join('\n')}\n\nType 'restart' to begin again.`;
