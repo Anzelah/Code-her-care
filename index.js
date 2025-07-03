@@ -11,10 +11,15 @@ const clinics = require('./clinics');
 // Set twilios environmental variables.
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
+const port = process.env.PORT;
 const client = twilio(accountSid, authToken);
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.get('/', (req, res) => {
+  res.send('Hello, World!')
+})
 
 app.post('/webhook', (req, res) => {
   const from = req.body.From;
@@ -55,4 +60,6 @@ function sendMessage(to, body) {
   });
 }
 
-app.listen(3000, () => console.log('Bot running on port 3000'));
+app.listen(port, () => {
+  console.log(`App running on port ${port}`)
+});
