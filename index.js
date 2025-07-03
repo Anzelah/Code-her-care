@@ -17,11 +17,13 @@ const client = twilio(accountSid, authToken);
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 
+// for testing purposes
 app.get('/', (req, res) => {
   res.send('Hello, World!')
 })
 
-app.post('/webhook', (req, res) => {
+// Webhook is where my app receive messages from WhatsApp and send replies through it
+/*app.post('/webhook', (req, res) => {
   const from = req.body.From;
   const incomingMsg = req.body.Body.trim().toLowerCase();
 
@@ -50,7 +52,21 @@ app.post('/webhook', (req, res) => {
   }
 
   res.sendStatus(200);
-});
+});*/
+
+app.post('/webhook', (req, res) => {
+  const from = req.body.From
+  const msg = req.body.Body
+
+  console.log(`Message received from ${from}. The message is ${msg}`)
+
+  client.messages.create({
+    from: process.env.TWILIO_WHATSAPP_NUMBER,
+    to: from,
+    body: `You said: ${msg}`,
+  });
+  res.sendStatus(200)
+})
 
 function sendMessage(to, body) {
   client.messages.create({
