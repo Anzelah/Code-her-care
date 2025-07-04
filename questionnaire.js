@@ -46,7 +46,7 @@ function getNextQuestion(step) {
 // session is sessions[from] azn the users phone number
 // the input is the message they sent us i.e. the one with from, body etc from twilio.
 function saveAnswer(session, input) {
-  const currentQ = questions[session.step];
+  const currentQ = questions[session.step]; // access the questions array at index of session.step i.e. 0, 1, etc
   if (currentQ) {
     session.answers[currentQ.key] = input; // store the appropriate answer under the correct key
     session.step++;
