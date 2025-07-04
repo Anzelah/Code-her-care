@@ -22,22 +22,23 @@ app.get('/', (req, res) => {
   res.send('Hello, World!')
 })
 
+
 // Webhook is where my app receive messages from WhatsApp and send replies through it
-/*app.post('/webhook', (req, res) => {
-  const from = req.body.From;
+app.post('/webhook', (req, res) => {
+  const from = req.body.From; // retreives the phone number
   const incomingMsg = req.body.Body.trim().toLowerCase();
 
-  if (!sessions[from]) sessions[from] = { step: 0, answers: {} };
 
-  // Restart logic
-  if (incomingMsg === 'restart') {
+  // if new user, initialize their screening(one is a new user if you couldn't find a session associated with the number)
+  if (!sessions[from]) {
     sessions[from] = { step: 0, answers: {} };
-    sendMessage(from, '✅ Conversation restarted.\n\n' + getNextQuestion(0));
-    return res.sendStatus(200);
+    sendMessage(from, "Welcome. Let's start your cervical cancer risk screening. Start answering whenever you're comfortable. All answers you provide are anonymous\n\n" + getNextQuestion(0));
+    return res.sendStatus(200); // exits this loop early
   }
-
   const session = sessions[from];
+  // save the current answer. This function loops through to ensure all answers are answered and stored in the specific key.
   saveAnswer(session, incomingMsg);
+  
 
   if (isComplete(session)) {
     const risk = calculateProbabilisticRisk(session.answers);
@@ -52,8 +53,8 @@ app.get('/', (req, res) => {
   }
 
   res.sendStatus(200);
-});*/
-
+});
+/*
 // test webhook and twilio by simply echoing back a message. its working perfectly.
 app.post('/webhook', (req, res) => {
   const from = req.body.From
@@ -67,7 +68,7 @@ app.post('/webhook', (req, res) => {
     body: `You said: ${msg}`,
   });
   res.sendStatus(200)
-})
+}) */
 
 function sendMessage(to, body) {
   client.messages.create({
