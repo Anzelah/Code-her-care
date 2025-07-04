@@ -54,6 +54,7 @@ app.get('/', (req, res) => {
   res.sendStatus(200);
 });*/
 
+// test webhook and twilio by simply echoing back a message. its working perfectly.
 app.post('/webhook', (req, res) => {
   const from = req.body.From
   const msg = req.body.Body

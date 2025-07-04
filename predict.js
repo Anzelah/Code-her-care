@@ -1,3 +1,4 @@
+// use naive bayes algortih/method to predict probability depending on answers given
 function calculateProbabilisticRisk(answers) {
   const baseRiskProbs = {
     low: 0.6,

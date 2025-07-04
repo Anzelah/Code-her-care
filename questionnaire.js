@@ -1,3 +1,4 @@
+// hold your questions in an array of objects
 const questions = [
   {
     key: 'sexuallyActive',
@@ -35,15 +36,19 @@ const questions = [
     options: ['Yes', 'No'],
   },
 ];
+
   
 function getNextQuestion(step) {
   return questions[step] ? questions[step].question : '';
 }
 
+
+// session is sessions[from] azn the users phone number
+// the input is the message they sent us i.e. the one with from, body etc from twilio.
 function saveAnswer(session, input) {
-  const question = questions[session.step];
-  if (question) {
-    session.answers[question.key] = input;
+  const currentQ = questions[session.step];
+  if (currentQ) {
+    session.answers[currentQ.key] = input; // store the appropriate answer under the correct key
     session.step++;
   }
 }
