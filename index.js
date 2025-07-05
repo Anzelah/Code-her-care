@@ -6,7 +6,6 @@ const twilio = require('twilio');
 const { getNextQuestion, saveAnswer, isComplete } = require('./questionnaire');
 const { calculateProbabilisticRisk } = require('./predict');
 const sessions = require('./session');
-const clinics = require('./clinics');
 
 // Set twilios environmental variables.
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
@@ -28,7 +27,6 @@ app.post('/webhook', (req, res) => {
   const from = req.body.From; // retreives the phone number
   const incomingMsg = req.body.Body.trim().toLowerCase();
 
-
   // if new user, initialize their screening(one is a new user if you couldn't find a session associated with the number)
   if (!sessions[from]) {
     sessions[from] = { step: 0, answers: {} };
@@ -41,11 +39,18 @@ app.post('/webhook', (req, res) => {
   
 
   if (isComplete(session)) {
-    const risk = calculateProbabilisticRisk(session.answers);
-    const clinicList = clinics('nairobi'); // You can refine by user input later
+    const res = calculateProbabilisticRisk(session.answers); // returns an object
+    const risk = res[riskLevel] // either low, medium or high
 
-    const response = `🩺 *Your risk level is:* ${risk.toUpperCase()}.\n\n🏥 *Suggested clinics near you:*\n${clinicList.map(c => `• ${c.name}, ${c.location}`).join('\n')}\n\nType 'restart' to begin again.`;
-    sendMessage(from, response);
+    const endMsg = `You're all done!\n\n Based on your answers, your cervical cancer risk level is ${risk}.`
+    const riskMessages = {
+      low: 'Great news. Continue following safer sexual practices to continue being safe',
+      medium: 'You may be at a moderate risk. Consider scheduling a screening when possible just to be sure',
+      high: 'You are at a higher risk. We recommend getting screened as soon as possible',
+    }
+
+    const response = `${endMsg}\n\n${riskMessages[risk]}`
+    sendMessage(from, response)
     delete sessions[from];
   } else {
     const nextQ = getNextQuestion(session.step);
