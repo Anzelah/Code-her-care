@@ -1,0 +1,45 @@
+// LOW risks
+const r = [
+  { sexuallyActive: 'No', hpvVaccine: 'Yes', age: 'A', bleeding: 'No', pain: 'No', discharge: 'No' }, // low
+  { sexuallyActive: 'No', hpvVaccine: 'Yes', age: 'E', bleeding: 'No', pain: 'No', discharge: 'No' }, // low
+  { sexuallyActive: 'Yes', hpvVaccine: 'Yes', age: 'A', bleeding: 'No', pain: 'No', discharge: 'No' }, // low
+  { sexuallyActive: 'Yes', hpvVaccine: 'Yes', age: 'E', bleeding: 'No', pain: 'No', discharge: 'No' }, // low
+
+  // MEDIUM risks
+  { sexuallyActive: 'Yes', hpvVaccine: 'Yes', age: 'B', bleeding: 'Yes', pain: 'No', discharge: 'No' }, // medium
+  { sexuallyActive: 'Yes', hpvVaccine: 'No',  age: 'B', bleeding: 'No',  pain: 'No', discharge: 'No' }, // medium
+  { sexuallyActive: 'Yes', hpvVaccine: 'Yes', age: 'D', bleeding: 'No',  pain: 'Yes', discharge: 'Yes' }, // medium
+  { sexuallyActive: 'Yes', hpvVaccine: 'No',  age: 'D', bleeding: 'No',  pain: 'No', discharge: 'No' }, // medium
+
+  // HIGH risks
+  { sexuallyActive: 'Yes', hpvVaccine: 'No',  age: 'C', bleeding: 'Yes', pain: 'No', discharge: 'No' }, // high
+  { sexuallyActive: 'Yes', hpvVaccine: 'No',  age: 'C', bleeding: 'Yes', pain: 'Yes', discharge: 'Yes' }, // high
+  { sexuallyActive: 'Yes', hpvVaccine: 'No',  age: 'D', bleeding: 'Yes', pain: 'No', discharge: 'Yes' }, // high
+  { sexuallyActive: 'Yes', hpvVaccine: 'No',  age: 'B', bleeding: 'Yes', pain: 'Yes', discharge: 'No' }, // high
+
+  // MIXED (boundary cases)
+  { sexuallyActive: 'Yes', hpvVaccine: 'Yes', age: 'C', bleeding: 'No',  pain: 'Yes', discharge: 'No' }, // medium
+  { sexuallyActive: 'No',  hpvVaccine: 'No',  age: 'D', bleeding: 'No',  pain: 'No', discharge: 'No' }, // medium
+  { sexuallyActive: 'Yes', hpvVaccine: 'Yes', age: 'C', bleeding: 'Yes', pain: 'No', discharge: 'Yes' }, // high
+  { sexuallyActive: 'Yes', hpvVaccine: 'Yes', age: 'B', bleeding: 'No',  pain: 'Yes', discharge: 'Yes' }, // medium
+
+  // Additional 16 randomized but tagged
+  { sexuallyActive: 'No',  hpvVaccine: 'Yes', age: 'B', bleeding: 'No',  pain: 'No', discharge: 'No' }, // low
+  { sexuallyActive: 'Yes', hpvVaccine: 'No',  age: 'A', bleeding: 'No',  pain: 'No', discharge: 'No' }, // low
+  { sexuallyActive: 'Yes', hpvVaccine: 'Yes', age: 'D', bleeding: 'Yes', pain: 'No', discharge: 'No' }, // medium
+  { sexuallyActive: 'No',  hpvVaccine: 'No',  age: 'C', bleeding: 'Yes', pain: 'No', discharge: 'No' }, // high
+  { sexuallyActive: 'Yes', hpvVaccine: 'No',  age: 'E', bleeding: 'No',  pain: 'Yes', discharge: 'No' }, // medium
+  { sexuallyActive: 'No',  hpvVaccine: 'Yes', age: 'C', bleeding: 'No',  pain: 'No', discharge: 'Yes' }, // medium
+  { sexuallyActive: 'Yes', hpvVaccine: 'No',  age: 'B', bleeding: 'Yes', pain: 'No', discharge: 'Yes' }, // high
+  { sexuallyActive: 'Yes', hpvVaccine: 'Yes', age: 'D', bleeding: 'Yes', pain: 'No', discharge: 'No' }, // medium
+  { sexuallyActive: 'No',  hpvVaccine: 'No',  age: 'A', bleeding: 'No',  pain: 'No', discharge: 'No' }, // low
+  { sexuallyActive: 'Yes', hpvVaccine: 'Yes', age: 'B', bleeding: 'No',  pain: 'Yes', discharge: 'No' }, // medium
+  { sexuallyActive: 'No',  hpvVaccine: 'No',  age: 'C', bleeding: 'No',  pain: 'No', discharge: 'Yes' }, // medium
+  { sexuallyActive: 'Yes', hpvVaccine: 'No',  age: 'D', bleeding: 'Yes', pain: 'Yes', discharge: 'No' }, // high
+  { sexuallyActive: 'Yes', hpvVaccine: 'Yes', age: 'C', bleeding: 'No',  pain: 'No', discharge: 'Yes' }, // medium
+  { sexuallyActive: 'Yes', hpvVaccine: 'No',  age: 'E', bleeding: 'Yes', pain: 'No', discharge: 'No' }, // medium
+  { sexuallyActive: 'No',  hpvVaccine: 'Yes', age: 'D', bleeding: 'Yes', pain: 'No', discharge: 'No' }, // medium
+  { sexuallyActive: 'Yes', hpvVaccine: 'No',  age: 'C', bleeding: 'Yes', pain: 'No', discharge: 'Yes' }, // high
+  { sexuallyActive: 'No',  hpvVaccine: 'No',  age: 'B', bleeding: 'Yes', pain: 'Yes', discharge: 'Yes' }, // high
+  { sexuallyActive: 'Yes', hpvVaccine: 'No',  age: 'C', bleeding: 'Yes', pain: 'Yes', discharge: 'Yes' }, // high
+]
