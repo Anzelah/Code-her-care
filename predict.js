@@ -42,28 +42,44 @@ function calculateProbabilisticRisk(answers) {
     high: { Yes: 0.85, No: 0.15 }
   };
 
+  // Helper to throw error if a value is missing
+  function getSafeProb(table, risk, key, fieldName) {
+    const value = table[risk][key];
+    if (value === undefined) {
+      throw new Error(`Missing value "${key}" in field "${fieldName}" for risk level "${risk}"`);
+    }
+    return value;
+  }
+
+  // Normalize inputs like "yes" → "Yes"
+  function normalize(input) {
+    if (!input) return '';
+    return input.trim().charAt(0).toUpperCase() + input.trim().slice(1).toLowerCase();
+  }
+
+  const age = answers.age;
+  const sex = normalize(answers.sexuallyActive);
+  const vaccinated = normalize(answers.hpvVaccine);
+  const flow = normalize(answers.bleeding);
+  const pain = normalize(answers.pain);
+  const discharge = normalize(answers.discharge);
+
   const risks = ['low', 'medium', 'high'];
   const scores = {};
-  const age = answers.age
-  const sex = answers.sexuallyActive
-  const flow = answers.bleeding
-  const pain = answers.pain
-  const vaccinated = answers.hpvVaccine
-  const discharge = answers.discharge
 
   for (const risk of risks) {
     const prob = baseRiskProbs[risk]
-      * (ageProbGivenRisk[risk][age] || 0.01)
-      * (sexProbGivenRisk[risk][sex] || 0.01)
-      * (vaccinatedProbGivenRisk[risk][vaccinated] || 0.01)
-      * (flowProbGivenRisk[risk][flow] || 0.01)
-      * (painProbGivenRisk[risk][pain] || 0.01)
-      * (dischargeProbGivenRisk[risk][discharge] || 0.01);
+      * getSafeProb(ageProbGivenRisk, risk, age, 'age')
+      * getSafeProb(sexProbGivenRisk, risk, sex, 'sexuallyActive')
+      * getSafeProb(vaccinatedProbGivenRisk, risk, vaccinated, 'hpvVaccine')
+      * getSafeProb(flowProbGivenRisk, risk, flow, 'bleeding')
+      * getSafeProb(painProbGivenRisk, risk, pain, 'pain')
+      * getSafeProb(dischargeProbGivenRisk, risk, discharge, 'discharge');
 
     scores[risk] = prob;
   }
-
-  // Normalize the scores to add up to 1
+  
+  // Normalize scores so they sum to 1
   const total = scores.low + scores.medium + scores.high;
   const normalized = {
     low: scores.low / total,
@@ -71,7 +87,7 @@ function calculateProbabilisticRisk(answers) {
     high: scores.high / total
   };
 
-  // Get the highest probability
+  // Determine highest probability
   let maxRisk = 'low';
   if (normalized.medium > normalized[maxRisk]) maxRisk = 'medium';
   if (normalized.high > normalized[maxRisk]) maxRisk = 'high';
