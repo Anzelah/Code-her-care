@@ -39,19 +39,21 @@ app.post('/webhook', (req, res) => {
   
 
   if (isComplete(session)) {
-    const res = calculateProbabilisticRisk(session.answers); // returns an object
-    const risk = res[riskLevel] // either low, medium or high
+    const resp = calculateProbabilisticRisk(session.answers); // returns an object
+    const risk = resp[riskLevel] // either low, medium or high
 
-    const endMsg = `You're all done!\n\n Based on your answers, your cervical cancer risk level is ${risk}.`
+    const endMsg = `You're all done!\n\n Based on your answers, your cervical cancer risk level is: ${risk.toUpperCase()}.`
     const riskMessages = {
-      low: 'Great news. Continue following safer sexual practices to continue being safe',
-      medium: 'You may be at a moderate risk. Consider scheduling a screening when possible just to be sure',
-      high: 'You are at a higher risk. We recommend getting screened as soon as possible',
+      low: 'Great news. You appear to be at a lower risk. Keep protecting yourself by practicing safe sex and staying informed about your health. Prevention is your best defense',
+      medium: 'You may be at a moderate risk. Consider scheduling a cervical cancer screening when possible — just to be sure',
+      high: 'You are at a high risk. We recommend getting screened as soon as possible — early detection could save your life',
     }
 
     const response = `${endMsg}\n\n${riskMessages[risk]}`
     sendMessage(from, response)
+
     delete sessions[from];
+    return res.sendStatus(200)
   } else {
     const nextQ = getNextQuestion(session.step);
     sendMessage(from, nextQ);
