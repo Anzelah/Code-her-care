@@ -2,14 +2,8 @@
 function calculateProbabilisticRisk(answers) {
   const baseRiskProbs = {
     low: 0.6,
-    medium: 0.25,
+    medium: 0.35,
     high: 0.15
-  };
-
-  const ageProbGivenRisk = {
-    low:   { A: 0.4, B: 0.25, C: 0.05, D: 0.1, E: 0.2 },
-    medium:{ A: 0.2, B: 0.3, C: 0.1, D: 0.1, E: 0.3 },
-    high:  { A: 0.05, B: 0.1, C: 0.4, D: 0.25, E: 0.2 }
   };
 
   const sexProbGivenRisk = { 
@@ -20,8 +14,14 @@ function calculateProbabilisticRisk(answers) {
 
   const vaccinatedProbGivenRisk = { 
     low: { Yes: 0.68, No: 0.42 },
-    medium: { Yes: 0.4, No: 0.6 },
-    high: { Yes: 0.15, No: 0.85 }
+    medium: { Yes: 0.55, No: 0.45 },
+    high: { Yes: 0.2, No: 0.8 }
+  };
+
+  const ageProbGivenRisk = {
+    low:   { A: 0.4, B: 0.25, C: 0.05, D: 0.1, E: 0.2 },
+    medium:{ A: 0.2, B: 0.3, C: 0.1, D: 0.1, E: 0.3 },
+    high:  { A: 0.05, B: 0.1, C: 0.4, D: 0.25, E: 0.2 }
   };
 
   const flowProbGivenRisk = {

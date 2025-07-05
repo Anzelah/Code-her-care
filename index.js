@@ -40,7 +40,7 @@ app.post('/webhook', (req, res) => {
 
   if (isComplete(session)) {
     const resp = calculateProbabilisticRisk(session.answers); // returns an object
-    const risk = resp[riskLevel] // either low, medium or high
+    const risk = resp.riskLevel // either low, medium or high
 
     const endMsg = `You're all done!\n\n Based on your answers, your cervical cancer risk level is: ${risk.toUpperCase()}.`
     const riskMessages = {
