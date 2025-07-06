@@ -10,7 +10,7 @@ const testInputs = [
   { sexuallyActive: 'Yes', hpvVaccine: 'Yes', age: 'B', bleeding: 'Yes', pain: 'No', discharge: 'No' }, // medium CORRECT 5
 
   // HIGH RISK: Mid-age, unvaccinated, bleeding
-  { sexuallyActive: 'Yes', hpvVaccine: 'No', age: 'C', bleeding: 'Yes', pain: 'No', discharge: 'No' }, // high CORRECT said medium  6
+  { sexuallyActive: 'Yes', hpvVaccine: 'No', age: 'C', bleeding: 'Yes', pain: 'No', discharge: 'No' }, // high CORRECT said medium  6 (** to refine aftwerwards)
 
   // MEDIUM-HIGH RISK: Older, unvaccinated, with pain and discharge
   { sexuallyActive: 'Yes', hpvVaccine: 'No', age: 'D', bleeding: 'No', pain: 'Yes', discharge: 'Yes' }, // high CORRECT.  7

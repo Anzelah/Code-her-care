@@ -26,7 +26,7 @@ function calculateProbabilisticRisk(answers) {
 
   const flowProbGivenRisk = {
     low: { Yes: 0.1, No: 0.9 },
-    medium: { Yes: 0.6, No: 0.4 },
+    medium: { Yes: 0.65, No: 0.35 },
     high: { Yes: 0.9, No: 0.1 }
   };
 
