@@ -14,32 +14,32 @@ function calculateProbabilisticRisk(answers) {
 
   const vaccinatedProbGivenRisk = { 
     low: { Yes: 0.68, No: 0.42 },
-    medium: { Yes: 0.55, No: 0.45 },
-    high: { Yes: 0.2, No: 0.8 }
+    medium: { Yes: 0.5, No: 0.5 },
+    high: { Yes: 0.35, No: 0.65 }
   };
 
   const ageProbGivenRisk = {
-    low:   { A: 0.4, B: 0.25, C: 0.05, D: 0.1, E: 0.2 },
-    medium:{ A: 0.2, B: 0.3, C: 0.1, D: 0.1, E: 0.3 },
-    high:  { A: 0.05, B: 0.1, C: 0.4, D: 0.25, E: 0.2 }
+    low:   { A: 0.75, B: 0.15, C: 0.06, D: 0.03, E: 0.01 },
+    medium:{ A: 0.1, B: 0.4, C: 0.35, D: 0.1, E: 0.05 },
+    high:  { A: 0.01, B: 0.12, C: 0.36, D: 0.4, E: 0.11 }
   };
 
   const flowProbGivenRisk = {
-    low: { Yes: 0.2, No: 0.8 },
-    medium: { Yes: 0.5, No: 0.5 },
-    high: { Yes: 0.8, No: 0.2 }
+    low: { Yes: 0.1, No: 0.9 },
+    medium: { Yes: 0.6, No: 0.4 },
+    high: { Yes: 0.9, No: 0.1 }
   };
 
   const painProbGivenRisk = {
     low: { Yes: 0.2, No: 0.8 },
     medium: { Yes: 0.5, No: 0.5 },
-    high: { Yes: 0.75, No: 0.25 }
+    high: { Yes: 0.65, No: 0.35 }
   };
 
   const dischargeProbGivenRisk = {
     low: { Yes: 0.2, No: 0.8 },
-    medium: { Yes: 0.6, No: 0.4 },
-    high: { Yes: 0.85, No: 0.15 }
+    medium: { Yes: 0.5, No: 0.5 },
+    high: { Yes: 0.7, No: 0.3 }
   };
 
   // Helper to throw error if a value is missing

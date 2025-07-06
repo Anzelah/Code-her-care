@@ -14,7 +14,7 @@ const questions = [
     
   {
     key: 'age',
-    question: 'What is your age group?\nA. Under 21\nB. 21 to 29\nC. 35 to 44\nD. 45 to 64/n. E. 65 and above', // women age 30s(35 - 50) to early 40s are the highest at risk of cervical cancer
+    question: 'What is your age group?\nA. Under 24\nB. 25 to 34\nC. 35 to 44\nD. 45 to 64\n. E. 65 and above', // women age 30s(35 - 50) to early 40s are the highest at risk of cervical cancer
     options: ['A', 'B', 'C', 'D', 'E'],
   },
 
