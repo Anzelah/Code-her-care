@@ -30,7 +30,7 @@ app.post('/webhook', (req, res) => {
   // if new user, initialize their screening(one is a new user if you couldn't find a session associated with the number)
   if (!sessions[from]) {
     sessions[from] = { step: 0, answers: {} };
-    sendMessage(from, "Welcome. Let's start your cervical cancer risk screening. Start answering whenever you're comfortable. All answers you provide are anonymous\n\n" + getNextQuestion(0));
+    sendMessage(from, "👋 Hi there! Welcome to the Cervical Cancer Risk Checker.\n\n\ We'll ask you a few quick questions to estimate your risk level then offer helpful advice. Please answer as accurate as you can.\n\n" + getNextQuestion(0));
     return res.sendStatus(200); // exits this loop early
   }
   const session = sessions[from];
