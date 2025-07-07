@@ -1,7 +1,7 @@
 // use naive bayes algortih/method to predict probability depending on answers given
 function calculateProbabilisticRisk(answers) {
   const baseRiskProbs = {
-    low: 0.6,
+    low: 0.6, // will change this once I get real data
     medium: 0.35,
     high: 0.15
   };
