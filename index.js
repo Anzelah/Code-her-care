@@ -37,7 +37,7 @@ app.post('/webhook', (req, res) => {
   // else fetch sessions of the associated number
   const session = sessions[from];
   
-  // Check if the user has started answering the questionnaire
+  // If user hasn't started, wait for hi 
   if (!session.hasStarted) {
     const triggers = [ 'hi', 'h', 'i', 'hii' ]
 
@@ -50,20 +50,23 @@ app.post('/webhook', (req, res) => {
     }
     return res.sendStatus(200);
   }
+
+  // User has started. Save answers
   saveAnswer(session, incomingMsg);
 
   if (isComplete(session)) {
     const resp = calculateProbabilisticRisk(session.answers); // returns an object
     const risk = resp.riskLevel // either low, medium or high
 
-    const endMsg = `You're all done!\n\n Based on your answers, your cervical cancer risk level is: ${risk.toUpperCase()}.`
+    const psMsg = `📌 *Did you know?* Cervical cancer can take up to 10–20 years to develop. It often has no symptoms in early stages — so regular screening is the only way to catch it early.`;
+    const endMsg = `You're all done!\n\n Based on your answers, your risk level is: ${risk.toUpperCase()}.`
     const riskMessages = {
-      low: 'Great news. You appear to be at a lower risk. Keep protecting yourself by practicing safe sex and staying informed about your health. Prevention is your best defense',
-      medium: 'You may be at a moderate risk. Consider scheduling a cervical cancer screening when possible — just to be sure',
-      high: 'You are at a high risk. We recommend getting screened as soon as possible — early detection could save your life',
+      low: `✅ You appear to be at a lower risk. Keep protecting yourself by practicing safe sex and staying informed about your health. Prevention is your best defense`,
+      medium: `⚠️ You may be at a *moderate risk*. Since cervical cancer can remain silent for 10-20 years before becoming invasive, we strongly recommend getting screened. Screening is the only way to catch it early!`,
+      high: `🚨 You may be at *high risk*. Please go get screened immediately. Early detection will save your life, and starting treatment early often means simpler, less painful care.`,
     }
-
-    const response = `${endMsg}\n\n${riskMessages[risk]}`
+ 
+    const response = `${endMsg}\n\n${riskMessages[risk]}\n\n${psMsg}`
     sendMessage(from, response)
 
     delete sessions[from];
