@@ -25,18 +25,32 @@ app.get('/', (req, res) => {
 // Webhook is where my app receive messages from WhatsApp and send replies through it
 app.post('/webhook', (req, res) => {
   const from = req.body.From; // retreives the phone number
-  const incomingMsg = req.body.Body.trim().toLowerCase();
+  const incomingMsg = req.body.Body.trim();
 
-  // if new user, initialize their screening(one is a new user if you couldn't find a session associated with the number)
+  // if new user, initialize a session with them
   if (!sessions[from]) {
-    sessions[from] = { step: 0, answers: {} };
-    sendMessage(from, "👋 Hi there! Welcome to the Cervical Cancer Risk Checker.\n\n\ We'll ask you a few quick questions to estimate your risk level then offer helpful advice. Please answer as accurate as you can.\n\n" + getNextQuestion(0));
-    return res.sendStatus(200); // exits this loop early
+    sessions[from] = { step: -1, hasStarted: false, answers: {} };
+    sendMessage(from, "👋 Hi there! Welcome to the Cervical Cancer Risk Checker.\n\nWe'll ask you a few quick questions to estimate your risk level. Kindly answer as accurate as you can. \n\n To begin, please reply with *Hi*");
+    return res.sendStatus(200);
   }
-  const session = sessions[from];
-  // save the current answer. This function loops through to ensure all answers are answered and stored in the specific key.
-  saveAnswer(session, incomingMsg);
   
+  // else fetch sessions of the associated number
+  const session = sessions[from];
+  
+  // Check if the user has started answering the questionnaire
+  if (!session.hasStarted) {
+    const triggers = [ 'hi', 'h', 'i', 'hii' ]
+
+    if (triggers.includes(incomingMsg.toLowerCase())) {
+      session.hasStarted = true;
+      session.step = 0;
+      sendMessage(from, getNextQuestion(0));
+    } else {
+      sendMessage(from, "👋 Please reply with *Hi* to begin the screening.");
+    }
+    return res.sendStatus(200);
+  }
+  saveAnswer(session, incomingMsg);
 
   if (isComplete(session)) {
     const resp = calculateProbabilisticRisk(session.answers); // returns an object
