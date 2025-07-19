@@ -18,7 +18,58 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // for testing purposes
 app.get('/', (req, res) => {
-  res.send('Hello, World!')
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>WhatsApp Cervical Cancer Chatbot</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #f7f9fb;
+          color: #333;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          margin: 0;
+          padding: 20px;
+          text-align: center;
+        }
+        .container {
+          max-width: 500px;
+          background-color: #fff;
+          padding: 30px;
+          border-radius: 12px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h1 {
+          color: #006644;
+          font-size: 24px;
+          margin-bottom: 16px;
+        }
+        p {
+          font-size: 16px;
+          line-height: 1.6;
+        }
+        .highlight {
+          font-weight: bold;
+          color: #e91e63;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h1>Welcome to our WhatsApp Cervical Cancer Screening Chatbot</h1>
+        <p>To get started, send <span class="highlight">'join period-window'</span> to <span class="highlight">+1 (415) 523-8886</span> on WhatsApp.</p>
+        <p>Once you send the message, our chatbot will guide you through a quick cervical cancer risk screening. 💬</p>
+      </div>
+    </body>
+    </html>
+  `)
 })
 
 
@@ -26,6 +77,8 @@ app.get('/', (req, res) => {
 app.post('/webhook', (req, res) => {
   const from = req.body.From; // retrieves the phone number
   const incomingMsg = req.body.Body.trim();
+
+
 
   // if new user, initialize a session with them
   if (!sessions[from]) {
