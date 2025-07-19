@@ -78,8 +78,6 @@ app.post('/webhook', (req, res) => {
   const from = req.body.From; // retrieves the phone number
   const incomingMsg = req.body.Body.trim();
 
-
-
   // if new user, initialize a session with them
   if (!sessions[from]) {
     sessions[from] = { step: -1, hasStarted: false, isFinished: false, answers: {} };
@@ -126,9 +124,11 @@ app.post('/webhook', (req, res) => {
 
   // Valid inputs. Save answers
   saveAnswer(session, incomingMsg);
+  console.log('First')
 
   // If a user has answered all questions
   if (isComplete(session)) {
+    console.log('Second')
     const resp = calculateProbabilisticRisk(session.answers); // returns an object
     const risk = resp.riskLevel // either low, medium or high
 
@@ -143,6 +143,7 @@ app.post('/webhook', (req, res) => {
     // send final message if user has completed the questionnaire
     const response = `${endMsg}\n\n${riskMessages[risk]}\n\n${psMsg}`
     sendMessage(from, response)
+    console.log('Third')
 
     session.isFinished = true;
     return;
@@ -150,7 +151,7 @@ app.post('/webhook', (req, res) => {
     const nextQ = getNextQuestion(session.step);
     sendMessage(from, nextQ);
   }
-  //res.sendStatus(200);
+  res.sendStatus(200);
 });
 
 
