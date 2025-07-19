@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const twilio = require('twilio');
 
-const { getNextQuestion, saveAnswer, isComplete } = require('./questionnaire');
+const { getNextQuestion, saveAnswer, validateAnswer, isComplete } = require('./questionnaire');
 const { calculateProbabilisticRisk } = require('./predict');
 const sessions = require('./session');
 
@@ -24,20 +24,33 @@ app.get('/', (req, res) => {
 
 // Webhook is where my app receive messages from WhatsApp and send replies through it
 app.post('/webhook', (req, res) => {
-  const from = req.body.From; // retreives the phone number
+  const from = req.body.From; // retrieves the phone number
   const incomingMsg = req.body.Body.trim();
 
   // if new user, initialize a session with them
   if (!sessions[from]) {
-    sessions[from] = { step: -1, hasStarted: false, answers: {} };
+    sessions[from] = { step: -1, hasStarted: false, isFinished: false, answers: {} };
     sendMessage(from, "👋 Hi there! Welcome to the Cervical Cancer Risk Checker.\n\nWe'll ask you a few quick questions to estimate your risk level. Kindly answer as accurate as you can. \n\n To begin, please reply with *Hi*");
-    return res.sendStatus(200);
+    return;
   }
   
   // else fetch sessions of the associated number
   const session = sessions[from];
+
+  // Restart support for when the same user wants to restart the questionnaire after completing it
+  if (incomingMsg.toLowerCase().includes("restart")) {
+    sessions[from] = { step: 0, hasStarted: false, isFinished: false, answers: {},};
+    sendMessage(from, questions[0]);
+    return;
+  }
+
+  // If user had answered all questions, don't restart the questionnaire, unless they explicitly respond with a hi
+  if (session.isFinished) {
+    sendMessage(from, "✅ You've already completed the assessment. Reply with *Restart* to take it again.")
+    return;
+  }
   
-  // If user hasn't started, wait for hi 
+  // If user hasn't started, wait for hi. This includes cases where it's an empty message
   if (!session.hasStarted) {
     const triggers = [ 'hi', 'h', 'i', 'hii' ]
 
@@ -48,12 +61,20 @@ app.post('/webhook', (req, res) => {
     } else {
       sendMessage(from, "👋 Please reply with *Hi* to begin the screening.");
     }
-    return res.sendStatus(200);
+    return;
   }
 
-  // User has started. Save answers
+  // Validate answer for each step
+  const error = validateAnswer(incomingMsg, session.step);
+  if (error) {
+    sendMessage(from, error + "\n\n" + getNextQuestion(session.step)); // Repeat same question
+    return;
+  }
+
+  // Valid inputs. Save answers
   saveAnswer(session, incomingMsg);
 
+  // If a user has answered all questions
   if (isComplete(session)) {
     const resp = calculateProbabilisticRisk(session.answers); // returns an object
     const risk = resp.riskLevel // either low, medium or high
@@ -65,34 +86,20 @@ app.post('/webhook', (req, res) => {
       medium: `⚠️ You may be at a *moderate risk*. Since cervical cancer can remain silent for 10-20 years before becoming invasive, we strongly recommend getting screened. Screening is the only way to catch it early!`,
       high: `🚨 You may be at *high risk*. Please go get screened immediately. Early detection will save your life, and starting treatment early often means simpler, less painful care.`,
     }
- 
+
+    // send final message if user has completed the questionnaire
     const response = `${endMsg}\n\n${riskMessages[risk]}\n\n${psMsg}`
     sendMessage(from, response)
 
-    delete sessions[from];
-    return res.sendStatus(200)
+    session.isFinished = true;
+    return;
   } else {
     const nextQ = getNextQuestion(session.step);
     sendMessage(from, nextQ);
   }
-
-  res.sendStatus(200);
+  //res.sendStatus(200);
 });
-/*
-// test webhook and twilio by simply echoing back a message. its working perfectly.
-app.post('/webhook', (req, res) => {
-  const from = req.body.From
-  const msg = req.body.Body
 
-  console.log(`Message received from ${from}. The message is ${msg}`)
-
-  client.messages.create({
-    from: process.env.TWILIO_WHATSAPP_NUMBER,
-    to: from,
-    body: `You said: ${msg}`,
-  });
-  res.sendStatus(200)
-}) */
 
 function sendMessage(to, body) {
   client.messages.create({
