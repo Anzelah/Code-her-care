@@ -10,7 +10,7 @@ const sessions = require('./session');
 // Set twilios environmental variables.
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 const client = twilio(accountSid, authToken);
 
 const app = express();
